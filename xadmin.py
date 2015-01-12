@@ -3,7 +3,7 @@
 import sys
 import os
 
-endpoints_file = "endpoints.txt"
+endpoints_file = os.path.dirname(os.path.realpath(__file__)) + "/" + "endpoints.txt"
 default_dial_uri = "tbjolset.ex90@lys.cisco.com"
 default_endpoint = "sx20"
 open_web_in_new_window = False

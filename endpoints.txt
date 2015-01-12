@@ -1,4 +1,7 @@
 10.54.80.30 sx20
 10.47.13.127 licorice
 10.47.13.62 ex90
+10.47.13.82 mweeljoh-sx80 (carbon)
+10.47.117.153 mweeljoh-sx20
+10.54.81.39 mweeljoh-sx10
 

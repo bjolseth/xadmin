@@ -3,32 +3,34 @@
 # and acces them with shell completion for all endpoints defined
 # in endpoints.txt
 
+export X_ADMIN=~/mybash/xadmin/xadmin.py
+
 function xlist() {
-    ./xadmin.py --list
+    $X_ADMIN --list
 }
 
 function xadmin() {
-    ./xadmin.py --admin $1
+    $X_ADMIN --admin $1
 }
 
 function xroot() {
-    ./xadmin.py --root $1
+    $X_ADMIN --root $1
 }
 
 function xanswer() {
-    ./xadmin.py --answer $1
+    $X_ADMIN --answer $1
 }
 
 function xdial() {
-    ./xadmin.py --dial $1 $2
+    $X_ADMIN --dial $1 $2
 }
 
 function xdisconnect() {
-    ./xadmin.py --disconnect $1
+    $X_ADMIN --disconnect $1
 }
 
 function xweb() {
-    ./xadmin.py --web $1
+    $X_ADMIN --web $1
 }
 
 _xadminendpoints()
