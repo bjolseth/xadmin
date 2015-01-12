@@ -1,9 +1,18 @@
 # Source this file to get xadmin shell support
 # Allows you to easily create named shortcuts to endpoints
-# and acces them with shell completion
+# and acces them with shell completion for all endpoints defined
+# in endpoints.txt
+
+function xlist() {
+    ./xadmin.py --list
+}
 
 function xadmin() {
-    ./xadmin.py $1
+    ./xadmin.py --admin $1
+}
+
+function xroot() {
+    ./xadmin.py --root $1
 }
 
 function xanswer() {
@@ -18,14 +27,10 @@ function xweb() {
     ./xadmin.py --web $1
 }
 
-function xroot() {
-    ./xadmin.py --root $1
-}
-
 _xadminendpoints()
 {
     local cur=${COMP_WORDS[COMP_CWORD]}
-    COMPREPLY=( $(compgen -W "$(xadmin)" -- $cur) )
+    COMPREPLY=( $(compgen -W "$(xlist)" -- $cur) )
 }
 
 complete -F _xadminendpoints xadmin

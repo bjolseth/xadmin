@@ -5,33 +5,38 @@ import os
 
 endpoints_file = "endpoints.txt"
 default_dial_uri = "tbjolset.ex90@lys.cisco.com"
+default_endpoint = "sx20"
 open_web_in_new_window = False
 
 def main():
-    args = sys.argv
+    args = sys.argv[1:] # pop first element which is script name
     arg_count = len(args)
 
-    if arg_count == 1:
+    if (arg_count < 1):
+        sys.exit("Format: xadmin --action endpointname")
+
+    action = args[0]
+    endpoint = args[1] if arg_count > 1 else default_endpoint
+
+    if action == "--list":
         show_endpoints()
 
-    elif arg_count == 2:
-        connect_to(args[1])
+    elif action == "--admin":
+        connect_to(endpoint)
 
-    elif (args[1] == "--root"):
-        connect_to(args[2], "root")
+    elif action == "--root":
+        connect_to(endpoint, "root")
 
-    elif args[1] == "--answer":
-        do_xcommand(args[2], 'xcommand call accept')
+    elif action == "--answer":
+        do_xcommand(endpoint, 'xcommand call accept')
 
-    elif args[1] == "--web":
-        open_browser(args[2])
+    elif action == "--web":
+        open_browser(endpoint)
 
-    elif args[1] == "--dial" and arg_count == 4:
-        uri = args[3] if arg_count == 4 else default_dial_uri
-        do_xcommand(args[2], 'xcommand dial number: ' + uri)
+    elif action == "--dial":
+        uri = args[2] if arg_count == 3 else default_dial_uri
+        do_xcommand(endpoint, 'xcommand dial number: ' + uri)
 
-    else:
-        print("No action")
 
 def connect_to(endpoint, user="admin", cmd=""):
     user = user + "@" + get_ip(endpoint)
