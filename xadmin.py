@@ -8,12 +8,27 @@ default_dial_uri = "tbjolset.ex90@lys.cisco.com"
 default_endpoint = "sx20"
 open_web_in_new_window = False
 
+help = """\
+Quick acces to common operations on endpoints with auto-completion in shell
+
+Commands:
+ xlist                Show all endpoints (from endpoints.txt)
+ xadmin <codec>       Ssh as admin to endpoint
+ xroot <codec>        Ssh as root to endpoint
+ xdial <uri> <codec>  Dial from codec to uri. If none are provided, use your defaults
+ xanswer <codec>      Answer any incoming call
+ xdisconnect <codec>  Disconnect all calls
+ xweb <codec>         Open web browser for endpoint's web settings (google-chrome required)
+
+Codec name is optional, if not provided, the default is used
+"""
+
 def main():
     args = sys.argv[1:] # pop first element which is script name
     arg_count = len(args)
 
     if (arg_count < 1):
-        sys.exit("Format: xadmin --action endpointname")
+        sys.exit(help)
 
     action = args[0]
     endpoint = args[1] if arg_count > 1 else default_endpoint
@@ -29,6 +44,9 @@ def main():
 
     elif action == "--answer":
         do_xcommand(endpoint, 'xcommand call accept')
+
+    elif action == "--disconnect":
+        do_xcommand(endpoint, 'xcommand call disconnectall')
 
     elif action == "--web":
         open_browser(endpoint)

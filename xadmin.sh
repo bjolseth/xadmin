@@ -23,6 +23,10 @@ function xdial() {
     ./xadmin.py --dial $1 $2
 }
 
+function xdisconnect() {
+    ./xadmin.py --disconnect $1
+}
+
 function xweb() {
     ./xadmin.py --web $1
 }
