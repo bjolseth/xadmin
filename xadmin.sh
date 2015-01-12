@@ -6,6 +6,18 @@ function xadmin() {
     ./xadmin.py $1
 }
 
+function xanswer() {
+    ./xadmin.py --answer $1
+}
+
+function xdial() {
+    ./xadmin.py --dial $1 $2
+}
+
+function xweb() {
+    ./xadmin.py --web $1
+}
+
 function xroot() {
     ./xadmin.py --root $1
 }
@@ -18,3 +30,8 @@ _xadminendpoints()
 
 complete -F _xadminendpoints xadmin
 complete -F _xadminendpoints xroot
+complete -F _xadminendpoints xanswer
+complete -F _xadminendpoints xdial
+complete -F _xadminendpoints xweb
+
+

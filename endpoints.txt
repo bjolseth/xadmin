@@ -1,3 +1,4 @@
-10.47.13.127 licorice mx300
-10.54.80.30 tbjolset sx20
+10.47.13.127 licorice
+10.54.80.30 tbjolset-sx20
+10.47.13.62 tbjolset-ex90
 
