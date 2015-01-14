@@ -26,22 +26,21 @@ Commands:
 Codec name is optional, if not provided, the default is used
 """
 
-def main():
-    args = sys.argv[1:] # pop first element which is script name
-    arg_count = len(args)
+def main(endpoint, action):
 
-    if (arg_count < 1 or args[0] == "--help"):
-        sys.exit(help)
-
-    action = args[0]
-    endpoint = args[-1] if arg_count > 1 else default_endpoint
-    ip = get_ip(endpoint)
+    try:
+        ip = get_ip(endpoint)
+    except FileNotFoundError:
+        sys.exit("Couldn't find endpoint file {}. Please make sure it exists".format(endpoints_file))
 
     if ip == None:
         print("Couldn't find any endpoint matching '{}'. Known endpoints: ".format(endpoint))
         show_endpoints()
         sys.exit()
 
+    do_action(ip, action)
+
+def do_action(ip, action):
     if action == "--list":
         show_endpoints()
 
@@ -69,6 +68,7 @@ def main():
 
     elif action == "--search" and arg_count == 3:
         search(ip, args[1])
+
 
 def connect_to(ip, user="admin", cmd=""):
     user = user + "@" + ip
@@ -123,5 +123,17 @@ def get_endpoints():
 
     return endpoints
 
+
+
 if (__name__ == "__main__"):
-    main()
+
+    args = sys.argv[1:] # pop first element which is script name
+    arg_count = len(args)
+
+    if (arg_count < 1 or args[0] == "--help"):
+        sys.exit(help)
+
+    action = args[0]
+    endpoint = args[-1] if arg_count > 1 else default_endpoint
+    main(endpoint, action)
+

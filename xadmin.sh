@@ -51,6 +51,7 @@ complete -F _xadminendpoints xadmin
 complete -F _xadminendpoints xroot
 complete -F _xadminendpoints xanswer
 complete -F _xadminendpoints xdial
+complete -F _xadminendpoints xdisconnect
 complete -F _xadminendpoints xweb
 complete -F _xadminendpoints xsearch
 
