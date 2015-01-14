@@ -33,6 +33,10 @@ function xweb() {
     $X_ADMIN --web $1
 }
 
+function xsearch() {
+    $X_ADMIN --search $1 $2
+}
+
 _xadminendpoints()
 {
     local cur=${COMP_WORDS[COMP_CWORD]}
@@ -44,5 +48,5 @@ complete -F _xadminendpoints xroot
 complete -F _xadminendpoints xanswer
 complete -F _xadminendpoints xdial
 complete -F _xadminendpoints xweb
-
+complete -F _xadminendpoints xsearch
 

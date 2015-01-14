@@ -8,17 +8,20 @@ default_dial_uri = "tbjolset.ex90@lys.cisco.com"
 default_endpoint = "sx20"
 open_web_in_new_window = False
 
+tsh_cmd = "echo '{xcommand}' | ssh {user} /bin/tsh"
+
 help = """\
 Quick acces to common operations on endpoints with auto-completion in shell
 
 Commands:
- xlist                Show all endpoints (from endpoints.txt)
- xadmin <codec>       Ssh as admin to endpoint
- xroot <codec>        Ssh as root to endpoint
- xdial <uri> <codec>  Dial from codec to uri. If none are provided, use your defaults
- xanswer <codec>      Answer any incoming call
- xdisconnect <codec>  Disconnect all calls
- xweb <codec>         Open web browser for endpoint's web settings (google-chrome required)
+ xlist                      Show all endpoints (from endpoints.txt)
+ xadmin <codec>             Ssh as admin to endpoint
+ xroot <codec>              Ssh as root to endpoint
+ xdial <uri> <codec>        Dial from codec to uri. If none are provided, use your defaults
+ xanswer <codec>            Answer any incoming call
+ xdisconnect <codec>        Disconnect all calls
+ xsearch <word> <codec>     Search in xstatus and xconfig for word
+ xweb <codec>               Open web browser for endpoint's web settings (google-chrome required)
 
 Codec name is optional, if not provided, the default is used
 """
@@ -27,11 +30,11 @@ def main():
     args = sys.argv[1:] # pop first element which is script name
     arg_count = len(args)
 
-    if (arg_count < 1):
+    if (arg_count < 1 or args[0] == "--help"):
         sys.exit(help)
 
     action = args[0]
-    endpoint = args[1] if arg_count > 1 else default_endpoint
+    endpoint = args[-1] if arg_count > 1 else default_endpoint
 
     if action == "--list":
         show_endpoints()
@@ -52,15 +55,25 @@ def main():
         open_browser(endpoint)
 
     elif action == "--dial":
-        uri = args[2] if arg_count == 3 else default_dial_uri
+        uri = args[1] if arg_count == 3 else default_dial_uri
         do_xcommand(endpoint, 'xcommand dial number: ' + uri)
 
+    elif action == "--search" and arg_count == 3:
+        search(endpoint, args[1])
 
 def connect_to(endpoint, user="admin", cmd=""):
     user = user + "@" + get_ip(endpoint)
     cmd = " ".join(["ssh", user, cmd])
     print(cmd)
     os.system(cmd)
+
+def search(endpoint, word):
+    user = "admin@" + get_ip(endpoint)
+
+    for node in ['xstatus', 'xconfig']:
+        cmd = tsh_cmd.format(user=user, xcommand=node) + " | grep -i " + word
+        print(cmd)
+        os.system(cmd)
 
 def open_browser(endpoint):
         flag = "--new-window" if open_web_in_new_window else ""
@@ -71,7 +84,7 @@ def open_browser(endpoint):
 
 def do_xcommand(endpoint, xcommand):
     user = "admin@" + get_ip(endpoint)
-    cmd = "echo '{xcommand}' | ssh {user} /bin/tsh".format(user=user, xcommand=xcommand)
+    cmd = tsh_cmd.format(user=user, xcommand=xcommand)
     print(cmd)
     os.system(cmd)
 
