@@ -35,55 +35,64 @@ def main():
 
     action = args[0]
     endpoint = args[-1] if arg_count > 1 else default_endpoint
+    ip = get_ip(endpoint)
+
+    if ip == None:
+        print("Couldn't find any endpoint matching '{}'. Known endpoints: ".format(endpoint))
+        show_endpoints()
+        sys.exit()
 
     if action == "--list":
         show_endpoints()
 
+    elif action == "--listnames":
+        show_names()
+
     elif action == "--admin":
-        connect_to(endpoint)
+        connect_to(ip)
 
     elif action == "--root":
-        connect_to(endpoint, "root")
+        connect_to(ip, "root")
 
     elif action == "--answer":
-        do_xcommand(endpoint, 'xcommand call accept')
+        do_xcommand(ip, 'xcommand call accept')
 
     elif action == "--disconnect":
-        do_xcommand(endpoint, 'xcommand call disconnectall')
+        do_xcommand(ip, 'xcommand call disconnectall')
 
     elif action == "--web":
-        open_browser(endpoint)
+        open_browser(ip)
 
     elif action == "--dial":
         uri = args[1] if arg_count == 3 else default_dial_uri
-        do_xcommand(endpoint, 'xcommand dial number: ' + uri)
+        do_xcommand(ip, 'xcommand dial number: ' + uri)
 
     elif action == "--search" and arg_count == 3:
-        search(endpoint, args[1])
+        search(ip, args[1])
 
-def connect_to(endpoint, user="admin", cmd=""):
-    user = user + "@" + get_ip(endpoint)
+def connect_to(ip, user="admin", cmd=""):
+    user = user + "@" + ip
     cmd = " ".join(["ssh", user, cmd])
     print(cmd)
     os.system(cmd)
 
-def search(endpoint, word):
-    user = "admin@" + get_ip(endpoint)
+def search(ip, word):
+    user = "admin@" + ip
 
     for node in ['xstatus', 'xconfig']:
         cmd = tsh_cmd.format(user=user, xcommand=node) + " | grep -i " + word
         print(cmd)
         os.system(cmd)
 
-def open_browser(endpoint):
+def open_browser(ip):
         flag = "--new-window" if open_web_in_new_window else ""
-        cmd = "google-chrome {} http://{}".format(flag, get_ip(endpoint))
+        cmd = "google-chrome {} http://{}".format(flag, ip)
 
         print(cmd)
         os.system(cmd)
 
-def do_xcommand(endpoint, xcommand):
-    user = "admin@" + get_ip(endpoint)
+def do_xcommand(ip, xcommand):
+    user = "admin@" + ip
     cmd = tsh_cmd.format(user=user, xcommand=xcommand)
     print(cmd)
     os.system(cmd)
@@ -92,10 +101,17 @@ def get_ip(endpoint_name):
     ip = get_endpoints().get(endpoint_name)
     return ip
 
-def show_endpoints():
+def show_names():
     e = get_endpoints()
     for endpoint in e:
         print(endpoint)
+
+def show_endpoints():
+    e = get_endpoints()
+    width = max([len(x) for x in e.values()])
+
+    for ip, endpoint in e.items():
+        print(ip.ljust(width) + " - " + endpoint)
 
 def get_endpoints():
     endpoints = {}

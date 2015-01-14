@@ -9,6 +9,10 @@ function xlist() {
     $X_ADMIN --list
 }
 
+function xnames() {
+    $X_ADMIN --listnames
+}
+
 function xadmin() {
     $X_ADMIN --admin $1
 }
@@ -40,7 +44,7 @@ function xsearch() {
 _xadminendpoints()
 {
     local cur=${COMP_WORDS[COMP_CWORD]}
-    COMPREPLY=( $(compgen -W "$(xlist)" -- $cur) )
+    COMPREPLY=( $(compgen -W "$(xnames)" -- $cur) )
 }
 
 complete -F _xadminendpoints xadmin
