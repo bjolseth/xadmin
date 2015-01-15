@@ -1,7 +1,11 @@
-10.54.80.30 sx20
-10.47.13.127 licorice
-10.47.13.62 ex90
-10.47.13.82 mweeljoh-sx80 (carbon)
-10.47.117.153 mweeljoh-sx20
-10.54.81.39 mweeljoh-sx10
+10.54.80.30     sx20             tbjolset.sx20@lys.cisco.com
+10.47.13.127    licorice         licorice@cisco.com
+10.47.13.62     ex90             tbjolset.ex90@lys.cisco.com
+10.47.13.82     morten-sx80      10.47.13.82@lys.cisco.com
+10.47.117.153   morten-sx20      10.47.117.153@lys.cisco.com
+10.54.81.39     morten-sx10      10.54.81.39@lys.cisco.com
+10.47.13.228    gael-x20         gpouzera.sx20@lys.cisco.com
+10.47.13.240    gael-ex90        gpouzera@lys.cisco.com
+SEP000BAB6FBB11.rd.tandberg.com kepler1 30017
+SEP000BAB6FB021.rd.tandberg.com kepler2 30015
 

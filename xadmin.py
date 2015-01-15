@@ -113,11 +113,14 @@ def show_endpoints():
     for ip, endpoint in e.items():
         print(ip.ljust(width) + " - " + endpoint)
 
+#def find_uri(ip):
+#    subprocess.check_output("echo 'xstatus sip profile 1 registration 1 uri' | ssh admin@10.54.80.30 /bin/tsh", shell=True)
+
 def get_endpoints():
     endpoints = {}
     with open(endpoints_file, 'r') as file:
         for line in file:
-            endpoint = line.strip().split(' ')
+            endpoint = line.strip().split()
             if len(endpoint) > 1:
                 endpoints[endpoint[1]] = endpoint[0]
 
