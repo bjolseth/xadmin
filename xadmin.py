@@ -127,6 +127,11 @@ def show_endpoints():
 #def find_uri(ip):
 #    subprocess.check_output("echo 'xstatus sip profile 1 registration 1 uri' | ssh admin@10.54.80.30 /bin/tsh", shell=True)
 
+def add_entry(ip, name, uri):
+    line = " ".join([name, ip, uri])
+    with open(endpoints_file, "a") as file:
+        file.write("\n" + line)
+
 def get_endpoints():
     endpoints = {}
     with open(endpoints_file, 'r') as file:
