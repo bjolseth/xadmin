@@ -64,7 +64,7 @@ def do_action(ip, action):
 
     elif action == "--dial":
         uri = args[1] if arg_count == 3 else default_dial_uri
-        do_xcommand(ip, 'xcommand dial number: ' + uri)
+        dial(ip, uri)
 
     elif action == "--search" and arg_count == 3:
         search(ip, args[1])
@@ -75,6 +75,12 @@ def connect_to(ip, user="admin", cmd=""):
     cmd = " ".join(["ssh", user, cmd])
     print(cmd)
     os.system(cmd)
+
+def dial(ip, uri):
+    if ("@" not in uri):
+        uri = get_uri(args[-2])
+
+    do_xcommand(ip, 'xcommand dial number: ' + uri)
 
 def search(ip, word):
     user = "admin@" + ip
@@ -98,8 +104,12 @@ def do_xcommand(ip, xcommand):
     os.system(cmd)
 
 def get_ip(endpoint_name):
-    ip = get_endpoints().get(endpoint_name)
+    ip = get_endpoints().get(endpoint_name)[0]
     return ip
+
+def get_uri(endpoint_name):
+    uri = get_endpoints().get(endpoint_name)[1]
+    return uri
 
 def show_names():
     e = get_endpoints()
@@ -108,10 +118,11 @@ def show_names():
 
 def show_endpoints():
     e = get_endpoints()
-    width = max([len(x) for x in e.values()])
-
+    name_width = max([len(name) for name in e.keys()])
+    ip_width = max([len(ip) for ip, uri in e.values()])    
+    
     for ip, endpoint in e.items():
-        print(ip.ljust(width) + " - " + endpoint)
+        print(ip.ljust(name_width) + " - " + endpoint[0].ljust(ip_width) + " - " + endpoint[1])
 
 #def find_uri(ip):
 #    subprocess.check_output("echo 'xstatus sip profile 1 registration 1 uri' | ssh admin@10.54.80.30 /bin/tsh", shell=True)
@@ -121,8 +132,9 @@ def get_endpoints():
     with open(endpoints_file, 'r') as file:
         for line in file:
             endpoint = line.strip().split()
-            if len(endpoint) > 1:
-                endpoints[endpoint[1]] = endpoint[0]
+            
+            if len(endpoint) > 1: # skip empty lines
+                endpoints[endpoint[1]] = (endpoint[0].strip(), endpoint[2].strip())
 
     return endpoints
 
