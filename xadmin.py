@@ -30,10 +30,11 @@ def main(endpoint, action):
 
     try:
         ip = get_ip(endpoint)
+        
     except FileNotFoundError:
         sys.exit("Couldn't find endpoint file {}. Please make sure it exists".format(endpoints_file))
-
-    if ip == None:
+        
+    except TypeError:
         print("Couldn't find any endpoint matching '{}'. Known endpoints: ".format(endpoint))
         show_endpoints()
         sys.exit()
@@ -63,10 +64,10 @@ def do_action(ip, action):
         open_browser(ip)
 
     elif action == "--dial":
-        uri = args[1] if arg_count == 3 else default_dial_uri
+        uri = args[1] if arg_count > 1 else default_dial_uri
         dial(ip, uri)
 
-    elif action == "--search" and arg_count == 3:
+    elif action == "--search" and arg_count > 1:
         search(ip, args[1])
 
 
@@ -124,8 +125,13 @@ def show_endpoints():
     for ip, endpoint in e.items():
         print(ip.ljust(name_width) + " - " + endpoint[0].ljust(ip_width) + " - " + endpoint[1])
 
-#def find_uri(ip):
-#    subprocess.check_output("echo 'xstatus sip profile 1 registration 1 uri' | ssh admin@10.54.80.30 /bin/tsh", shell=True)
+def find_uri(ip):
+    import subprocess
+    result = subprocess.check_output("echo 'xstatus sip profile 1 registration 1 uri' | ssh admin@{ip} /bin/tsh".format(ip), shell=True)
+    words = result.split()
+    uris = [word for word in words if "@" in word]
+    uri = uris[0].replace('"', '') if uris else None
+    return uri
 
 def add_entry(ip, name, uri):
     line = " ".join([name, ip, uri])
@@ -153,7 +159,9 @@ if (__name__ == "__main__"):
     if (arg_count < 1 or args[0] == "--help"):
         sys.exit(help)
 
+    commands_with_params = ['--dial', '--search']
     action = args[0]
-    endpoint = args[-1] if arg_count > 1 else default_endpoint
+    endpoint_index = 2 if action in commands_with_params else 1
+    endpoint = args[endpoint_index] if arg_count > endpoint_index  else default_endpoint
     main(endpoint, action)
 
