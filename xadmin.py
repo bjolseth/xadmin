@@ -79,7 +79,7 @@ def connect_to(ip, user="admin", cmd=""):
 
 def dial(ip, uri):
     if ("@" not in uri):
-        uri = get_uri(args[-2])
+        uri = get_uri(args[1])
 
     do_xcommand(ip, 'xcommand dial number: ' + uri)
 
