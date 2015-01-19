@@ -6,5 +6,6 @@
 10.54.81.39     morten-sx10      10.54.81.39@lys.cisco.com
 10.47.13.228    gael-x20         gpouzera.sx20@lys.cisco.com
 10.47.13.240    gael-ex90        gpouzera@lys.cisco.com
+10.47.13.228    wall-E           c60-wall-1@lab.lys.cisco.com
 SEP000BAB6FBB11.rd.tandberg.com kepler1 30017
 SEP000BAB6FB021.rd.tandberg.com kepler2 30015
