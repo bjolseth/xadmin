@@ -37,7 +37,7 @@ def main(endpoint, action):
     except TypeError:
         print("Couldn't find any endpoint matching '{}'. Known endpoints: ".format(endpoint))
         show_endpoints()
-        sys.exit()
+        sys.exit(2)
 
     do_action(ip, action)
 
@@ -156,8 +156,9 @@ if (__name__ == "__main__"):
     args = sys.argv[1:] # pop first element which is script name
     arg_count = len(args)
 
-    if (arg_count < 1 or args[0] == "--help"):
-        sys.exit(help)
+    if (arg_count < 1 or args[1] == "--help"):
+        print(help)
+        sys.exit()
 
     commands_with_params = ['--dial', '--search']
     action = args[0]
