@@ -4,6 +4,7 @@ import sys
 import os
 
 endpoints_file = os.path.dirname(os.path.realpath(__file__)) + "/" + "endpoints.txt"
+
 default_dial_uri = "tbjolset.ex90@lys.cisco.com"
 default_endpoint = "sx20"
 open_web_in_new_window = False
@@ -32,7 +33,7 @@ def main(endpoint, action):
         ip = get_ip(endpoint)
         
     except FileNotFoundError:
-        sys.exit("Couldn't find endpoint file {}. Please make sure it exists".format(endpoints_file))
+        sys.exit("Couldn't find endpoint file {}. Please make sure it exists".format(get_filename()))
         
     except TypeError:
         print("Couldn't find any endpoint matching '{}'. Known endpoints: ".format(endpoint))
@@ -40,6 +41,12 @@ def main(endpoint, action):
         sys.exit(2)
 
     do_action(ip, action)
+
+def get_filename():
+    if os.environ.get('XADMIN_FILE'):
+        return os.environ.get('XADMIN_FILE')
+    return endpoints_file
+
 
 def do_action(ip, action):
     if action == "--list":
@@ -71,11 +78,15 @@ def do_action(ip, action):
         search(ip, args[1])
 
 
+def system_cmd(cmd):    
+    print(cmd)
+    if os.environ.get('XADMIN_DRY') is not "1":
+        os.system(cmd)
+
 def connect_to(ip, user="admin", cmd=""):
     user = user + "@" + ip
     cmd = " ".join(["ssh", user, cmd])
-    print(cmd)
-    os.system(cmd)
+    system_cmd(cmd)
 
 def dial(ip, uri):
     if ("@" not in uri):
@@ -88,22 +99,19 @@ def search(ip, word):
 
     for node in ['xstatus', 'xconfig']:
         cmd = tsh_cmd.format(user=user, xcommand=node) + " | grep -i " + word
-        print(cmd)
-        os.system(cmd)
+        system_cmd(cmd)
 
 def open_browser(ip):
         flag = "--new-window" if open_web_in_new_window else ""
         cmd = "google-chrome {} http://{}".format(flag, ip)
 
-        print(cmd)
-        os.system(cmd)
-
+        system_cmd(cmd)
+        
 def do_xcommand(ip, xcommand):
     user = "admin@" + ip
     cmd = tsh_cmd.format(user=user, xcommand=xcommand)
-    print(cmd)
-    os.system(cmd)
-
+    system_cmd(cmd)
+    
 def get_ip(endpoint_name):
     ip = get_endpoints().get(endpoint_name)[0]
     return ip
@@ -135,12 +143,12 @@ def find_uri(ip):
 
 def add_entry(ip, name, uri):
     line = " ".join([name, ip, uri])
-    with open(endpoints_file, "a") as file:
+    with open(get_filename(), "a") as file:
         file.write("\n" + line)
 
 def get_endpoints():
     endpoints = {}
-    with open(endpoints_file, 'r') as file:
+    with open(get_filename(), 'r') as file:
         for line in file:
             endpoint = line.strip().split()
             
