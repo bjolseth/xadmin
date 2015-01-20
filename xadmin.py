@@ -127,8 +127,8 @@ def show_endpoints():
 
 def find_uri(ip):
     import subprocess
-    result = subprocess.check_output("echo 'xstatus sip profile 1 registration 1 uri' | ssh admin@{ip} /bin/tsh".format(ip), shell=True)
-    words = result.split()
+    result = subprocess.check_output("echo 'xstatus sip profile 1 registration 1 uri' | ssh admin@{ip} /bin/tsh".format(ip=ip), shell=True)
+    words = result.decode(encoding='UTF-8').split()
     uris = [word for word in words if "@" in word]
     uri = uris[0].replace('"', '') if uris else None
     return uri
