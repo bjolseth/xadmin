@@ -79,6 +79,13 @@ class TestXadmin(unittest.TestCase):
         output = self.run_cmd("./xadmin.py --disconnect peppes")
         self.assertEqual(output, "echo 'xcommand call disconnectall' | ssh admin@22222222 /bin/tsh")
 
+    def test_pair(self):
+        output = self.run_cmd("./xadmin.py --pair")
+        self.assertEqual(output, "adb shell am broadcast -a com.cisco.CODEC_CONFIG_UPDATED -e address 10.54.80.30 -e username admin -e password ''")
+
+        output = self.run_cmd("./xadmin.py --pair booty")
+        self.assertEqual(output, "adb shell am broadcast -a com.cisco.CODEC_CONFIG_UPDATED -e address 1234 -e username admin -e password ''")
+
     def test_search(self):
         output = self.run_cmd("./xadmin.py --search jalla").split("\n")
         self.assertEqual(output[0], "echo 'xstatus' | ssh admin@10.54.80.30 /bin/tsh | grep -i jalla")

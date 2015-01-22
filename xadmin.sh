@@ -37,6 +37,10 @@ function xweb() {
     $X_ADMIN --web $1
 }
 
+function xpair() {
+    $X_ADMIN --pair $1
+}
+
 function xsearch() {
     $X_ADMIN --search $1 $2
 }
@@ -53,5 +57,6 @@ complete -F _xadminendpoints xanswer
 complete -F _xadminendpoints xdial
 complete -F _xadminendpoints xdisconnect
 complete -F _xadminendpoints xweb
+complete -F _xadminendpoints xpair
 complete -F _xadminendpoints xsearch
 

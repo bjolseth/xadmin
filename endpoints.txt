@@ -1,4 +1,4 @@
-10.54.80.30     sx20             tbjolset.sx20@lys.cisco.com
+10.47.13.191    sx20             tbjolset.sx20@lys.cisco.com
 10.47.13.127    licorice         licorice@cisco.com
 10.47.13.62     ex90             tbjolset.ex90@lys.cisco.com
 10.47.13.82     morten-sx80      10.47.13.82@lys.cisco.com

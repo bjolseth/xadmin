@@ -22,6 +22,7 @@ Commands:
  xanswer <codec>            Answer any incoming call
  xdisconnect <codec>        Disconnect all calls
  xsearch <word> <codec>     Search in xstatus and xconfig for word
+ xpair <codec>              Pair idefix with codec. Requires adb
  xweb <codec>               Open web browser for endpoint's web settings (google-chrome required)
 
 Codec name is optional, if not provided, the default is used
@@ -70,6 +71,9 @@ def do_action(ip, action):
     elif action == "--web":
         open_browser(ip)
 
+    elif action == "--pair":
+        pair(ip)
+
     elif action == "--dial":
         uri = args[1] if arg_count > 1 else default_dial_uri
         dial(ip, uri)
@@ -86,6 +90,10 @@ def system_cmd(cmd):
 def connect_to(ip, user="admin", cmd=""):
     user = user + "@" + ip
     cmd = " ".join(["ssh", user, cmd])
+    system_cmd(cmd)
+
+def pair(ip):
+    cmd = "adb shell am broadcast -a com.cisco.CODEC_CONFIG_UPDATED -e address {ip} -e username admin -e password ''".format(ip=ip)
     system_cmd(cmd)
 
 def dial(ip, uri):
