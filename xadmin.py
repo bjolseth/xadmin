@@ -172,7 +172,7 @@ if (__name__ == "__main__"):
     args = sys.argv[1:] # pop first element which is script name
     arg_count = len(args)
 
-    if (arg_count < 1 or args[0] == "--help"):
+    if (arg_count < 1 or args[-1] == "--help"):
         print(help)
         sys.exit()
 
